@@ -1,0 +1,21 @@
+
+.toggle-button{
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.toggle-button:focused {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
+}
+
+.tree-table-view:focused{
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+}
+
+.tree-table-row{
+
+}
+

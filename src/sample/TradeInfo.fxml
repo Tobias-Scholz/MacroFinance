@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TradePopupController">
+   <center>
+      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" fx:id="tableView">
+        <columns>
+          <TableColumn fx:id="id_column" prefWidth="39.0" text="ID" />
+          <TableColumn fx:id="from_position_column" prefWidth="101.0" text="From_Position" />
+            <TableColumn fx:id="to_position_column" prefWidth="85.0" text="To_Position" />
+            <TableColumn fx:id="value_column" prefWidth="69.0" text="Value" />
+            <TableColumn fx:id="date_column" prefWidth="75.0" text="Date" />
+            <TableColumn fx:id="category_column" prefWidth="65.0" text="Category" />
+            <TableColumn fx:id="description_column" prefWidth="75.0" text="Description" />
+            <TableColumn fx:id="delete_edit_column" prefWidth="75.0" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>
