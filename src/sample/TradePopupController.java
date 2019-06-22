@@ -21,9 +21,9 @@ public class TradePopupController
     @FXML
     TableColumn<Trade, Integer> id_column;
     @FXML
-    TableColumn<Trade, String> to_position_column;
+    TableColumn<Trade, Integer> to_position_column;
     @FXML
-    TableColumn<Trade, String> from_position_column;
+    TableColumn<Trade, Integer> from_position_column;
     @FXML
     TableColumn<Trade, String> value_column;
     @FXML
@@ -36,41 +36,76 @@ public class TradePopupController
     public void init(Day day, ModelController modelController)
     {
         id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getId()));
-        to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(modelController.getPositions().get(tradeStringCellDataFeatures.getValue().getPosten_id_to()).getName()));
-        from_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(modelController.getPositions().get(tradeStringCellDataFeatures.getValue().getPosten_id_from()).getName()));
+        to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getPosten_id_to()));
+        from_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getPosten_id_from()));
         value_column.setCellValueFactory(tradeDoubleCellDataFeatures -> new SimpleObjectProperty<>(Utils.format_money_to_string(tradeDoubleCellDataFeatures.getValue().getValue())));
         description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDescription()));
         category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getCategory_id()));
         date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDate().toString()));
 
-        id_column.setCellFactory(tradeIntegerTableColumn -> new TableCell<>()
+        to_position_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getPosition_ids())
         {
-
-        });
-
-        to_position_column.setCellFactory(tradeStringTableColumn -> new TableCell<>()
-        {
-            ComboBox<Integer> comboBox = new ComboBox<>();
-
-
             @Override
-            public void updateItem(String item, boolean empty)
+            public void updateItem(Integer item, boolean empty)
             {
-                setText("");
-
                 if (item != null)
                 {
-                    comboBox.setItems(modelController.getPosition_ids());
+                    setText("");
+                    setGraphic(comboBox);
+                    comboBox.getSelectionModel().select(item);
                 }
+            }
+
+            @Override
+            public void init()
+            {
+                comboBox.setConverter(new StringConverter<Integer>()
+                {
+                    @Override
+                    public String toString(Integer integer)
+                    {
+                        return modelController.getPositions().get(integer).getName();
+                    }
+
+                    @Override
+                    public Integer fromString(String s)
+                    {
+                        return null;
+                    }
+                });
             }
         });
 
-        category_column.setCellFactory(new Callback<TableColumn<Trade, Integer>, TableCell<Trade, Integer>>()
+        from_position_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getPosition_ids())
         {
             @Override
-            public ComboBoxTableCell<Integer> call(TableColumn<Trade, Integer> tradeIntegerTableColumn)
+            public void updateItem(Integer item, boolean empty)
             {
-                return null;
+                if (item != null)
+                {
+                    setText("");
+                    setGraphic(comboBox);
+                    comboBox.getSelectionModel().select(item);
+                }
+            }
+
+            @Override
+            public void init()
+            {
+                comboBox.setConverter(new StringConverter<Integer>()
+                {
+                    @Override
+                    public String toString(Integer integer)
+                    {
+                        return modelController.getPositions().get(integer).getName();
+                    }
+
+                    @Override
+                    public Integer fromString(String s)
+                    {
+                        return null;
+                    }
+                });
             }
         });
 
