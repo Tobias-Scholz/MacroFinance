@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -32,6 +34,8 @@ public class TradePopupController
     TableColumn<Trade, Integer> category_column;
     @FXML
     TableColumn<Trade, String> date_column;
+    @FXML
+    TableColumn<Trade, Boolean> delete_edit_column;
 
     public void init(Day day, ModelController modelController)
     {
@@ -42,6 +46,7 @@ public class TradePopupController
         description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDescription()));
         category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getCategory_id()));
         date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDate().toString()));
+        delete_edit_column.setCellValueFactory(tradeStringCellDataFeatures -> tradeStringCellDataFeatures.getValue().any_field_changedProperty());
 
         to_position_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getPosition_ids())
         {
@@ -53,13 +58,17 @@ public class TradePopupController
                     setText("");
                     setGraphic(comboBox);
                     comboBox.getSelectionModel().select(item);
+
+                    comboBox.setOnAction(actionEvent -> {
+                        getTableView().getItems().get(getIndex()).getCached_trade().setPosten_id_to(comboBox.getSelectionModel().getSelectedItem());
+                    });
                 }
             }
 
             @Override
             public void init()
             {
-                comboBox.setConverter(new StringConverter<Integer>()
+                comboBox.setConverter(new StringConverter<>()
                 {
                     @Override
                     public String toString(Integer integer)
@@ -92,7 +101,7 @@ public class TradePopupController
             @Override
             public void init()
             {
-                comboBox.setConverter(new StringConverter<Integer>()
+                comboBox.setConverter(new StringConverter<>()
                 {
                     @Override
                     public String toString(Integer integer)
@@ -109,7 +118,7 @@ public class TradePopupController
             }
         });
 
-        category_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getCategory_ids())
+        category_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<>(modelController.getCategory_ids())
         {
             @Override
             public void updateItem(Integer item, boolean empty)
@@ -146,6 +155,7 @@ public class TradePopupController
         items.addAll(day.getTrades());
 
         tableView.setItems(items);
+        tableView.setSelectionModel(null);
     }
 }
 
@@ -170,7 +180,7 @@ abstract class ComboBoxTableCell<T> extends TableCell<Trade, T>
 {
     ComboBox<T> comboBox = new ComboBox<>();
 
-    public ComboBoxTableCell(ObservableList<T> items)
+    ComboBoxTableCell(ObservableList<T> items)
     {
        load_values(items);
        init();
@@ -178,7 +188,7 @@ abstract class ComboBoxTableCell<T> extends TableCell<Trade, T>
 
     public abstract void updateItem(T item, boolean empty);
 
-    void load_values(ObservableList<T> items)
+    private void load_values(ObservableList<T> items)
     {
         comboBox.setItems(items);
     }

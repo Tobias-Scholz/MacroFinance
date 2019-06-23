@@ -1,5 +1,8 @@
 package model;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sample.Database;
@@ -21,6 +24,8 @@ public class Trade
     private long value;
     private LocalDate date;
     private int category_id;
+    private Trade cached_trade;
+    private ObservableValue<Boolean> any_field_changed;
 
     public Trade(int id, int posten_id_from, int posten_id_to, String description, long value, Date date, int category_id)
     {
@@ -31,6 +36,8 @@ public class Trade
         this.value = value;
         this.date = date.toLocalDate();
         this.category_id = category_id;
+        cached_trade = new Trade(this);
+        any_field_changed = new SimpleBooleanProperty(false);
     }
 
     public Trade(int id, int posten_id_from, int posten_id_to, String description, long value, LocalDate date, int category_id)
@@ -42,6 +49,19 @@ public class Trade
         this.value = value;
         this.date = date;
         this.category_id = category_id;
+        cached_trade = new Trade(this);
+        any_field_changed = new SimpleBooleanProperty(false);
+    }
+
+    public Trade(Trade trade)
+    {
+        this.id = trade.getId();
+        this.posten_id_from = trade.getPosten_id_from();
+        this.posten_id_to = trade.getPosten_id_to();
+        this.description = trade.getDescription();
+        this.value = trade.getValue();
+        this.date = trade.getDate();
+        this.category_id = trade.getCategory_id();
     }
 
     private static void create_random_trade()
@@ -117,5 +137,15 @@ public class Trade
     public void setCategory_id(int category_id)
     {
         this.category_id = category_id;
+    }
+
+    public Trade getCached_trade()
+    {
+        return cached_trade;
+    }
+
+    public ObservableValue<Boolean> any_field_changedProperty()
+    {
+        return any_field_changed;
     }
 }
