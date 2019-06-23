@@ -25,7 +25,7 @@ public class Trade
     private LocalDate date;
     private int category_id;
     private Trade cached_trade;
-    private ObservableValue<Boolean> any_field_changed;
+    private SimpleBooleanProperty any_field_changed;
 
     public Trade(int id, int posten_id_from, int posten_id_to, String description, long value, Date date, int category_id)
     {
@@ -144,7 +144,7 @@ public class Trade
         return cached_trade;
     }
 
-    public ObservableValue<Boolean> any_field_changedProperty()
+    public SimpleBooleanProperty any_field_changedProperty()
     {
         return any_field_changed;
     }

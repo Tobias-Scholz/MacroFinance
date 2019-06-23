@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import model.Day;
@@ -27,7 +29,7 @@ public class TradePopupController
     @FXML
     TableColumn<Trade, Integer> from_position_column;
     @FXML
-    TableColumn<Trade, String> value_column;
+    TableColumn<Trade, Long> value_column;
     @FXML
     TableColumn<Trade, String> description_column;
     @FXML
@@ -42,7 +44,7 @@ public class TradePopupController
         id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getId()));
         to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getPosten_id_to()));
         from_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getPosten_id_from()));
-        value_column.setCellValueFactory(tradeDoubleCellDataFeatures -> new SimpleObjectProperty<>(Utils.format_money_to_string(tradeDoubleCellDataFeatures.getValue().getValue())));
+        value_column.setCellValueFactory(tradeDoubleCellDataFeatures -> new SimpleObjectProperty<>(tradeDoubleCellDataFeatures.getValue().getValue()));
         description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDescription()));
         category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getCategory_id()));
         date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDate().toString()));
@@ -60,7 +62,9 @@ public class TradePopupController
                     comboBox.getSelectionModel().select(item);
 
                     comboBox.setOnAction(actionEvent -> {
-                        getTableView().getItems().get(getIndex()).getCached_trade().setPosten_id_to(comboBox.getSelectionModel().getSelectedItem());
+                        Trade trade = getTableView().getItems().get(getIndex());
+                        trade.getCached_trade().setPosten_id_to(comboBox.getSelectionModel().getSelectedItem());
+                        trade.any_field_changedProperty().set(true);
                     });
                 }
             }
@@ -95,6 +99,12 @@ public class TradePopupController
                     setText("");
                     setGraphic(comboBox);
                     comboBox.getSelectionModel().select(item);
+
+                    comboBox.setOnAction(actionEvent -> {
+                        Trade trade = getTableView().getItems().get(getIndex());
+                        trade.getCached_trade().setPosten_id_from(comboBox.getSelectionModel().getSelectedItem());
+                        trade.any_field_changedProperty().set(true);
+                    });
                 }
             }
 
@@ -151,28 +161,56 @@ public class TradePopupController
             }
         });
 
+        delete_edit_column.setCellFactory(tradeBooleanTableColumn -> new TableCell<>()
+        {
+            Button button = new Button("Submit");
+
+            @Override
+            public void updateItem(Boolean item, boolean empty)
+            {
+                if (item != null)
+                {
+                    setGraphic(button);
+                    if (item)
+                    {
+                        button.setOpacity(1);
+                    }
+                    else
+                    {
+                        button.setOpacity(0);
+                    }
+                }
+            }
+        });
+
+        value_column.setCellFactory(tradeStringTableColumn -> new TableCell<>()
+        {
+            TextField textField = new TextField();
+
+            @Override
+            public void updateItem(Long item, boolean empty)
+            {
+                if (item != null)
+                {
+                    textField.setText(Utils.format_money_to_string(item));
+                    textField.textProperty().addListener(new ChangeListener<String>()
+                    {
+                        @Override
+                        public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
+                        {
+                            System.out.println(textField.getText());
+                        }
+                    });
+                    setGraphic(textField);
+                }
+            }
+        });
+
         ObservableList<Trade> items = FXCollections.observableArrayList();
         items.addAll(day.getTrades());
 
         tableView.setItems(items);
         tableView.setSelectionModel(null);
-    }
-}
-
-class TextFieldIntegerTableCell extends TableCell<Trade, Integer>
-{
-    TextField textField = new TextField();
-
-    @Override
-    public void updateItem(Integer item, boolean empty)
-    {
-        setText("");
-
-        if (item != null)
-        {
-            textField.setText(Integer.toString(item));
-            setGraphic(textField);
-        }
     }
 }
 
