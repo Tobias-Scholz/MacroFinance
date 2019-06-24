@@ -298,10 +298,12 @@ public class ModelController
     {
         return all_days;
     }
+
     public ArrayList<Month> getAll_months()
     {
         return all_months;
     }
+
     public ArrayList<Year> getAll_years()
     {
         return all_years;

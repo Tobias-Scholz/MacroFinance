@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -21,6 +22,8 @@ public class TradeRow
     private TextField value_textfield;
     private TextField description_textfield;
     private DatePicker datePicker;
+    private Button submitButton;
+    private Button deleteButton;
 
     TradeRow(Trade real_trade, ModelController modelController)
     {
@@ -75,6 +78,9 @@ public class TradeRow
 
         datePicker = new DatePicker();
         datePicker.setValue(trade.getDate());
+
+        submitButton = new Button("Submit");
+        deleteButton = new Button("X");
     }
 
     public Trade getTrade()
@@ -120,5 +126,15 @@ public class TradeRow
     public DatePicker getDatePicker()
     {
         return datePicker;
+    }
+
+    public Button getSubmitButton()
+    {
+        return submitButton;
+    }
+
+    public Button getDeleteButton()
+    {
+        return deleteButton;
     }
 }

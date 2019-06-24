@@ -16,7 +16,8 @@
             <TableColumn fx:id="date_column" prefWidth="75.0" text="Date" />
             <TableColumn fx:id="category_column" prefWidth="65.0" text="Category" />
             <TableColumn fx:id="description_column" prefWidth="75.0" text="Description" />
-            <TableColumn fx:id="delete_edit_column" prefWidth="75.0" />
+            <TableColumn fx:id="submit_column" prefWidth="75.0" />
+            <TableColumn fx:id="delete_column" prefWidth="75.0" />
         </columns>
       </TableView>
    </center>

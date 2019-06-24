@@ -37,7 +37,9 @@ public class TradePopupController
     @FXML
     TableColumn<TradeRow, DatePicker> date_column;
     @FXML
-    TableColumn<TradeRow, Boolean> delete_edit_column;
+    TableColumn<TradeRow, Button> submit_column;
+    @FXML
+    TableColumn<TradeRow, Button> delete_column;
 
     void init(Day day, ModelController modelController)
     {
@@ -48,32 +50,10 @@ public class TradePopupController
         description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDescription_textfield()));
         category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getCategory_id_combobox()));
         date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDatePicker()));
-        // delete_edit_column.setCellValueFactory(tradeStringCellDataFeatures -> tradeStringCellDataFeatures.getValue().getReal_trade().any_field_changedProperty());
+        submit_column.setCellValueFactory(tradeRowButtonCellDataFeatures -> new SimpleObjectProperty<>(tradeRowButtonCellDataFeatures.getValue().getSubmitButton()));
+        delete_column.setCellValueFactory(tradeRowButtonCellDataFeatures -> new SimpleObjectProperty<>(tradeRowButtonCellDataFeatures.getValue().getDeleteButton()));
 
         id_column.setStyle("-fx-alignment: CENTER");
-
-
-        delete_edit_column.setCellFactory(tradeBooleanTableColumn -> new TableCell<>()
-        {
-            Button button = new Button("Submit");
-
-            @Override
-            public void updateItem(Boolean item, boolean empty)
-            {
-                if (item != null)
-                {
-                    setGraphic(button);
-                    if (item)
-                    {
-                        button.setOpacity(1);
-                    }
-                    else
-                    {
-                        button.setOpacity(0);
-                    }
-                }
-            }
-        });
 
         ObservableList<TradeRow> items = FXCollections.observableArrayList();
         for (Trade trade : day.getTrades())
