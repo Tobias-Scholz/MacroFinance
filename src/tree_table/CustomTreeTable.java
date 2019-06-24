@@ -24,8 +24,6 @@ public class CustomTreeTable
 
     public void init()
     {
-        treeTableView.setFocusModel(null);
-
         ArrayList<TreeTableColumn> columns = new ArrayList<>();
 
         DateTreeColumn dateTreeColumn = new DateTreeColumn();
@@ -67,6 +65,7 @@ public class CustomTreeTable
             }
         }
 
+        treeTableView.setSelectionModel(null);
         treeTableView.setShowRoot(false);
         treeTableView.setRoot(root);
         treeTableView.refresh();

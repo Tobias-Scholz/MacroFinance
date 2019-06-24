@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,6 +19,8 @@ import model.Day;
 import model.ModelController;
 import model.Trade;
 import model.Utils;
+
+import java.util.prefs.Preferences;
 
 public class TradePopupController
 {
@@ -41,6 +45,14 @@ public class TradePopupController
     @FXML
     TableColumn<TradeRow, Button> delete_column;
 
+    private final String ID_COLUMN_WIDTH = "id_column_width";
+    private final String TO_POSITION_COLUMN_WIDTH = "to_position_column_width";
+    private final String FROM_POSITION_COLUMN_WIDTH = "from_position_column_width";
+
+    private final double DEFAULT_ID_COLUMN_WIDTH = 50;
+    private final double DEFAULT_TO_POSITION_COLUMN_WIDTH = 200;
+    private final double DEFAULT_FROM_POSITION_COLUMN_WIDTH = 200;
+
     void init(Day day, ModelController modelController)
     {
         id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getTrade().getId()));
@@ -52,6 +64,10 @@ public class TradePopupController
         date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDatePicker()));
         submit_column.setCellValueFactory(tradeRowButtonCellDataFeatures -> new SimpleObjectProperty<>(tradeRowButtonCellDataFeatures.getValue().getSubmitButton()));
         delete_column.setCellValueFactory(tradeRowButtonCellDataFeatures -> new SimpleObjectProperty<>(tradeRowButtonCellDataFeatures.getValue().getDeleteButton()));
+
+        id_column.setPrefWidth(Preferences.userRoot().getDouble(ID_COLUMN_WIDTH, DEFAULT_ID_COLUMN_WIDTH));
+
+        id_column.widthProperty().addListener(observable -> Preferences.userRoot().putDouble(ID_COLUMN_WIDTH, id_column.getWidth()));
 
         id_column.setStyle("-fx-alignment: CENTER");
 

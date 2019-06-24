@@ -49,6 +49,7 @@ public class Main extends Application {
             primaryStage.setY(y);
             primaryStage.setWidth(width);
             primaryStage.setHeight(height);
+            primaryStage.setMaximized(false);
         }
         else
         {
