@@ -3,6 +3,7 @@ module FinanceControl {
     requires javafx.controls;
     requires sqlite.jdbc;
     requires java.sql;
+    requires java.prefs;
 
     opens sample;
 }
