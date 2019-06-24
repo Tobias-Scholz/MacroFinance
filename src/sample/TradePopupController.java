@@ -25,106 +25,32 @@ public class TradePopupController
     @FXML
     TableColumn<TradeRow, Integer> id_column;
     @FXML
-    TableColumn<TradeRow, Integer> to_position_column;
+    TableColumn<TradeRow, ComboBox<Integer>> to_position_column;
     @FXML
-    TableColumn<TradeRow, Integer> from_position_column;
+    TableColumn<TradeRow, ComboBox<Integer>> from_position_column;
     @FXML
-    TableColumn<TradeRow, Long> value_column;
+    TableColumn<TradeRow, TextField> value_column;
     @FXML
-    TableColumn<TradeRow, String> description_column;
+    TableColumn<TradeRow, TextField> description_column;
     @FXML
     TableColumn<TradeRow, ComboBox<Integer>> category_column;
     @FXML
-    TableColumn<TradeRow, String> date_column;
+    TableColumn<TradeRow, DatePicker> date_column;
     @FXML
     TableColumn<TradeRow, Boolean> delete_edit_column;
 
     void init(Day day, ModelController modelController)
     {
-        id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getReal_trade().getId()));
-        to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getPosten_id_to()));
-        from_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getPosten_id_from()));
-        value_column.setCellValueFactory(tradeDoubleCellDataFeatures -> new SimpleObjectProperty<>(tradeDoubleCellDataFeatures.getValue().getReal_trade().getValue()));
-        description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getDescription()));
+        id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getTrade().getId()));
+        to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getTo_id_combobox()));
+        from_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getFrom_id_combobox()));
+        value_column.setCellValueFactory(tradeDoubleCellDataFeatures -> new SimpleObjectProperty<>(tradeDoubleCellDataFeatures.getValue().getValue_textfield()));
+        description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDescription_textfield()));
         category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getCategory_id_combobox()));
-        date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getDate().toString()));
+        date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getDatePicker()));
         // delete_edit_column.setCellValueFactory(tradeStringCellDataFeatures -> tradeStringCellDataFeatures.getValue().getReal_trade().any_field_changedProperty());
 
-        to_position_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getPosition_ids())
-        {
-            @Override
-            public void updateItem(Integer item, boolean empty)
-            {
-                if (item != null)
-                {
-                    setText("");
-                    setGraphic(comboBox);
-                    comboBox.getSelectionModel().select(item);
-
-                    comboBox.setOnAction(actionEvent -> {
-                        Trade trade = getTableView().getItems().get(getIndex()).getPre_save_trade();
-                    });
-                }
-            }
-
-            @Override
-            public void init()
-            {
-                comboBox.setConverter(new StringConverter<>()
-                {
-                    @Override
-                    public String toString(Integer integer)
-                    {
-                        return modelController.getPositions().get(integer).getName();
-                    }
-
-                    @Override
-                    public Integer fromString(String s)
-                    {
-                        return null;
-                    }
-                });
-            }
-        });
-
-        from_position_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getPosition_ids())
-        {
-            @Override
-            public void updateItem(Integer item, boolean empty)
-            {
-                if (item != null)
-                {
-                    setText("");
-                    setGraphic(comboBox);
-                    comboBox.getSelectionModel().select(item);
-
-                    comboBox.setOnAction(actionEvent -> {
-                        TradeRow tradeRow = getTableView().getItems().get(getIndex());
-                        tradeRow.getPre_save_trade().setPosten_id_from(comboBox.getSelectionModel().getSelectedItem());
-                    });
-                }
-            }
-
-            @Override
-            public void init()
-            {
-                comboBox.setConverter(new StringConverter<>()
-                {
-                    @Override
-                    public String toString(Integer integer)
-                    {
-                        return modelController.getPositions().get(integer).getName();
-                    }
-
-                    @Override
-                    public Integer fromString(String s)
-                    {
-                        return null;
-                    }
-                });
-            }
-        });
-
+        id_column.setStyle("-fx-alignment: CENTER");
 
 
         delete_edit_column.setCellFactory(tradeBooleanTableColumn -> new TableCell<>()
@@ -149,29 +75,6 @@ public class TradePopupController
             }
         });
 
-        value_column.setCellFactory(tradeStringTableColumn -> new TableCell<>()
-        {
-            TextField textField = new TextField();
-
-            @Override
-            public void updateItem(Long item, boolean empty)
-            {
-                if (item != null)
-                {
-                    textField.setText(Utils.format_money_to_string(item));
-                    textField.textProperty().addListener(new ChangeListener<String>()
-                    {
-                        @Override
-                        public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
-                        {
-                            System.out.println(textField.getText());
-                        }
-                    });
-                    setGraphic(textField);
-                }
-            }
-        });
-
         ObservableList<TradeRow> items = FXCollections.observableArrayList();
         for (Trade trade : day.getTrades())
         {
@@ -181,24 +84,4 @@ public class TradePopupController
         tableView.setItems(items);
         tableView.setSelectionModel(null);
     }
-}
-
-abstract class ComboBoxTableCell<T> extends TableCell<TradeRow, T>
-{
-    ComboBox<T> comboBox = new ComboBox<>();
-
-    ComboBoxTableCell(ObservableList<T> items)
-    {
-       load_values(items);
-       init();
-    }
-
-    public abstract void updateItem(T item, boolean empty);
-
-    private void load_values(ObservableList<T> items)
-    {
-        comboBox.setItems(items);
-    }
-
-    public abstract void init();
 }
