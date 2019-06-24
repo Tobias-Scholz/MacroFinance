@@ -33,7 +33,7 @@ public class TradePopupController
     @FXML
     TableColumn<TradeRow, String> description_column;
     @FXML
-    TableColumn<TradeRow, Integer> category_column;
+    TableColumn<TradeRow, ComboBox<Integer>> category_column;
     @FXML
     TableColumn<TradeRow, String> date_column;
     @FXML
@@ -46,9 +46,9 @@ public class TradePopupController
         from_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getPosten_id_from()));
         value_column.setCellValueFactory(tradeDoubleCellDataFeatures -> new SimpleObjectProperty<>(tradeDoubleCellDataFeatures.getValue().getReal_trade().getValue()));
         description_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getDescription()));
-        category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getCategory_id()));
+        category_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getCategory_id_combobox()));
         date_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getReal_trade().getDate().toString()));
-        delete_edit_column.setCellValueFactory(tradeStringCellDataFeatures -> tradeStringCellDataFeatures.getValue().getReal_trade().any_field_changedProperty());
+        // delete_edit_column.setCellValueFactory(tradeStringCellDataFeatures -> tradeStringCellDataFeatures.getValue().getReal_trade().any_field_changedProperty());
 
         to_position_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<Integer>(modelController.getPosition_ids())
         {
@@ -63,8 +63,6 @@ public class TradePopupController
 
                     comboBox.setOnAction(actionEvent -> {
                         Trade trade = getTableView().getItems().get(getIndex()).getPre_save_trade();
-                        trade.getCached_trade().setPosten_id_to(comboBox.getSelectionModel().getSelectedItem());
-                        trade.any_field_changedProperty().set(true);
                     });
                 }
             }
@@ -127,38 +125,7 @@ public class TradePopupController
             }
         });
 
-        category_column.setCellFactory(tradeStringTableColumn -> new ComboBoxTableCell<>(modelController.getCategory_ids())
-        {
-            @Override
-            public void updateItem(Integer item, boolean empty)
-            {
-                if (item != null)
-                {
-                    setText("");
-                    setGraphic(comboBox);
-                    comboBox.getSelectionModel().select(item);
-                }
-            }
 
-            @Override
-            public void init()
-            {
-                comboBox.setConverter(new StringConverter<Integer>()
-                {
-                    @Override
-                    public String toString(Integer integer)
-                    {
-                        return modelController.getCategories().get(integer);
-                    }
-
-                    @Override
-                    public Integer fromString(String s)
-                    {
-                        return null;
-                    }
-                });
-            }
-        });
 
         delete_edit_column.setCellFactory(tradeBooleanTableColumn -> new TableCell<>()
         {
@@ -208,7 +175,7 @@ public class TradePopupController
         ObservableList<TradeRow> items = FXCollections.observableArrayList();
         for (Trade trade : day.getTrades())
         {
-            items.add(new TradeRow(trade));
+            items.add(new TradeRow(trade, modelController));
         }
 
         tableView.setItems(items);
