@@ -4,6 +4,7 @@ module FinanceControl {
     requires sqlite.jdbc;
     requires java.sql;
     requires java.prefs;
+    requires java.desktop;
 
     opens sample;
 }

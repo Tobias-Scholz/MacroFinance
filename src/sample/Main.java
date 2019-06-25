@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import java.awt.*;
 
 import java.util.prefs.Preferences;
 
@@ -16,18 +17,16 @@ public class Main extends Application {
     private static final String WINDOW_WIDTH = "Window_Width";
     private static final String WINDOW_HEIGHT = "Window_Height";
     private static final String WINDOW_MAXIMIZED = "Window_Maximized";
-    private static final double DEFAULT_X = 10;
-    private static final double DEFAULT_Y = 10;
+    private static final double DEFAULT_X = -1;
+    private static final double DEFAULT_Y = -1;
     private static final double DEFAULT_WIDTH = 1280;
     private static final double DEFAULT_HEIGHT = 720;
     private static final boolean DEFAULT_MAXIMIZED = false;
-    private static final String NODE_NAME = "ViewSwitcher";
-    private static final String BUNDLE = "Bundle";
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("MacroFinance");
         Pane root = loader.load();
         Controller controller = loader.getController();
         controller.init();
@@ -36,7 +35,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Preferences pref = Preferences.userRoot().node(NODE_NAME);
+        Preferences pref = Preferences.userRoot();
         double x = pref.getDouble(WINDOW_POSITION_X, DEFAULT_X);
         double y = pref.getDouble(WINDOW_POSITION_Y, DEFAULT_Y);
         double width = pref.getDouble(WINDOW_WIDTH, DEFAULT_WIDTH);
@@ -45,8 +44,15 @@ public class Main extends Application {
 
         if (!maximized)
         {
-            primaryStage.setX(x);
-            primaryStage.setY(y);
+            if (x == -1 || y == -1)
+            {
+                primaryStage.centerOnScreen();
+            }
+            else
+            {
+                primaryStage.setX(x);
+                primaryStage.setY(y);
+            }
             primaryStage.setWidth(width);
             primaryStage.setHeight(height);
             primaryStage.setMaximized(false);
@@ -57,15 +63,13 @@ public class Main extends Application {
         }
 
         primaryStage.setOnCloseRequest((final WindowEvent event) -> {
-            Preferences preferences = Preferences.userRoot().node(NODE_NAME);
+            Preferences preferences = Preferences.userRoot();
             preferences.putDouble(WINDOW_POSITION_X, primaryStage.getX());
             preferences.putDouble(WINDOW_POSITION_Y, primaryStage.getY());
             preferences.putDouble(WINDOW_WIDTH, primaryStage.getWidth());
             preferences.putDouble(WINDOW_HEIGHT, primaryStage.getHeight());
             preferences.putBoolean(WINDOW_MAXIMIZED, primaryStage.isMaximized());
         });
-
-        primaryStage.setMaximized(true);
     }
 
     public static void main(String[] args)
