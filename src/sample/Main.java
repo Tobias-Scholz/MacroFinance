@@ -35,7 +35,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Preferences pref = Preferences.userRoot();
+        Preferences pref = Preferences.userRoot().node("MacroFinance");
         double x = pref.getDouble(WINDOW_POSITION_X, DEFAULT_X);
         double y = pref.getDouble(WINDOW_POSITION_Y, DEFAULT_Y);
         double width = pref.getDouble(WINDOW_WIDTH, DEFAULT_WIDTH);

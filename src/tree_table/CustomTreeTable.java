@@ -8,12 +8,16 @@ import sample.Database;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.prefs.Preferences;
 
 public class CustomTreeTable
 {
     private TreeTableView<CustomTableRow> treeTableView;
     private ModelController modelController;
     private Controller superController;
+
+    private final int DEFAULT_DATE_COLUMN_WIDTH = 130;
+    private final int DEFAULT_VALUE_COLUMN_WIDTH = 70;
 
     public CustomTreeTable(TreeTableView<CustomTableRow> treeTableView, ModelController modelController, Controller superController)
     {
@@ -24,13 +28,10 @@ public class CustomTreeTable
 
     public void init()
     {
-        ArrayList<TreeTableColumn> columns = new ArrayList<>();
-
         DateTreeColumn dateTreeColumn = new DateTreeColumn();
         treeTableView.getColumns().addAll(dateTreeColumn);
         dateTreeColumn.setComparator(Comparator.comparing(CustomTableRow::getDate));
 
-        dateTreeColumn.setMinWidth(130);
         TotalTableColumn totalTableColumn = new TotalTableColumn();
 
         for (Integer pos_id : modelController.getPosition_ids())
@@ -38,7 +39,6 @@ public class CustomTreeTable
             if (modelController.getPositions().get(pos_id).getType() != Position.Type.external)
             {
                 PositionTreeColumn column = new PositionTreeColumn(modelController.getPositions().get(pos_id), modelController.getPositions().get(pos_id).getName(), superController);
-                columns.add(column);
                 treeTableView.getColumns().add(column);
             }
         }
@@ -63,6 +63,13 @@ public class CustomTreeTable
                     monthItem.getChildren().add(new TreeItem<>(d));
                 }
             }
+        }
+
+        Preferences preferences = Preferences.userRoot().node("MacroFinance");
+
+        for (TreeTableColumn column : treeTableView.getColumns())
+        {
+            preferences.getInt(column.getText() + "_COLUMN_WIDTH", DEFAULT_VALUE_COLUMN_WIDTH);
         }
 
         treeTableView.setSelectionModel(null);
