@@ -69,6 +69,7 @@ public class Main extends Application {
             preferences.putDouble(WINDOW_WIDTH, primaryStage.getWidth());
             preferences.putDouble(WINDOW_HEIGHT, primaryStage.getHeight());
             preferences.putBoolean(WINDOW_MAXIMIZED, primaryStage.isMaximized());
+            controller.save_preferences();
         });
     }
 

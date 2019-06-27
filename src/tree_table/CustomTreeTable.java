@@ -16,8 +16,8 @@ public class CustomTreeTable
     private ModelController modelController;
     private Controller superController;
 
-    private final int DEFAULT_DATE_COLUMN_WIDTH = 130;
-    private final int DEFAULT_VALUE_COLUMN_WIDTH = 70;
+    private final double DEFAULT_DATE_COLUMN_WIDTH = 130;
+    private final double DEFAULT_VALUE_COLUMN_WIDTH = 70;
 
     public CustomTreeTable(TreeTableView<CustomTableRow> treeTableView, ModelController modelController, Controller superController)
     {
@@ -69,12 +69,25 @@ public class CustomTreeTable
 
         for (TreeTableColumn column : treeTableView.getColumns())
         {
-            preferences.getInt(column.getText() + "_COLUMN_WIDTH", DEFAULT_VALUE_COLUMN_WIDTH);
+            if (column.getText().equals("Date"))
+                column.setPrefWidth(preferences.getDouble(column.getText() + "_COLUMN_WIDTH", DEFAULT_DATE_COLUMN_WIDTH));
+            else
+                column.setPrefWidth(preferences.getDouble(column.getText() + "_COLUMN_WIDTH", DEFAULT_VALUE_COLUMN_WIDTH));
         }
 
         treeTableView.setSelectionModel(null);
         treeTableView.setShowRoot(false);
         treeTableView.setRoot(root);
         treeTableView.refresh();
+    }
+
+    public void save_preferences()
+    {
+        Preferences preferences = Preferences.userRoot().node("MacroFinance");
+
+        for (TreeTableColumn column : treeTableView.getColumns())
+        {
+            preferences.putDouble(column.getText() + "_COLUMN_WIDTH", column.getWidth());
+        }
     }
 }

@@ -91,4 +91,9 @@ public class Controller
             e.printStackTrace();
         }
     }
+
+    public void save_preferences()
+    {
+        treeTable.save_preferences();
+    }
 }
