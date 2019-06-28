@@ -1,5 +1,7 @@
 package model;
 
+import java.math.BigDecimal;
+
 public class Utils
 {
     public static String format_money_to_string(long value)
@@ -31,5 +33,17 @@ public class Utils
         }
 
         return ret;
+    }
+
+    public static Long convert_string_to_money(String string)
+    {
+        BigDecimal decimal = new BigDecimal(string);
+        decimal = decimal.multiply(new BigDecimal(100));
+        return decimal.longValue();
+    }
+
+    public static boolean is_valid_moneystring(String string)
+    {
+        return string.matches("^[0-9]*\\.?[0-9]*$");
     }
 }
