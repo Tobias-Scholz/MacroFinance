@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sample.Database;
 
+import java.awt.image.DataBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -95,7 +96,7 @@ public class ModelController
         current_month.setLast_day_of_month(current_day);
     }
 
-    void load_trade_stack()
+    private void load_trade_stack()
     {
         trade_stack = new HashMap<>();
 
@@ -292,6 +293,30 @@ public class ModelController
         {
             e.printStackTrace();
         }
+    }
+
+    public void update_trade(Trade trade)
+    {
+        Connection con = Database.getCon();
+
+        try
+        {
+            PreparedStatement prep = con.prepareStatement("UPDATE Trade SET from_id = ?, to_id = ?, description = ?, value = ?, date = ?, category_id = ? WHERE id = ?;");
+            prep.setInt(1, trade.getPosten_id_from());
+            prep.setInt(2, trade.getPosten_id_to());
+            prep.setString(3, trade.getDescription());
+            prep.setLong(4, trade.getValue());
+            prep.setString(5, java.sql.Date.valueOf(trade.getDate()).toString() + " 00:00:00.000");
+            prep.setInt(6, trade.getCategory_id());
+            prep.setInt(7, trade.getId());
+            prep.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        reload_after(trade.getDate());
     }
 
     public ArrayList<Day> getAll_days()

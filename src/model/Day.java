@@ -42,6 +42,7 @@ public class Day implements CustomTableRow
         for (int i = 0; i < values.size(); i++)
         {
             PD_pair pd_pair = values.get(i);
+            pd_pair.setValue(null);
 
             if (prev_row == null)
             {

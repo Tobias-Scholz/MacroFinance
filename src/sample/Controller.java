@@ -92,6 +92,13 @@ public class Controller
         }
     }
 
+    public void update_trade(Trade trade)
+    {
+        modelController.update_trade(trade);
+        treeTableView.refresh();
+        chart.redraw_chart();
+    }
+
     public void save_preferences()
     {
         treeTable.save_preferences();

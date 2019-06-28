@@ -108,7 +108,7 @@ public class Trade
         return value;
     }
 
-    public void setValue(long        value)
+    public void setValue(long value)
     {
         this.value = value;
     }
@@ -131,5 +131,22 @@ public class Trade
     public void setCategory_id(int category_id)
     {
         this.category_id = category_id;
+    }
+
+    public static String verify_trade(int from_id, int to_id, String value, String description, LocalDate date, int category_id)
+    {
+        String error = "";
+
+        if (from_id == to_id)
+        {
+            error += "You have to select to different Positions.\n";
+        }
+
+        if (value.equals(""))
+        {
+            error += "Value can not be empty\n";
+        }
+
+        return error;
     }
 }

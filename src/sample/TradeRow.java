@@ -81,6 +81,11 @@ public class TradeRow
 
         submitButton = new Button("Submit");
         deleteButton = new Button("X");
+
+        submitButton.setOnAction(actionEvent ->
+        {
+
+        });
     }
 
     public Trade getTrade()
