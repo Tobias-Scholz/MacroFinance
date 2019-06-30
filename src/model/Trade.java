@@ -133,26 +133,35 @@ public class Trade
         this.category_id = category_id;
     }
 
-    public static TradeError verify_trade(int from_id, int to_id, String value, String description, LocalDate date, int category_id)
+    public static TradeError verify_trade(int from_id, int to_id, String value, String description, LocalDate date, Integer category_id)
     {
         TradeError error = new TradeError();
 
         if (from_id == to_id)
         {
             error.append_to_error("You have to select to different Positions");
-            error.getErrors().put()
+            error.getErrors()[0] = true;
+            error.getErrors()[1] = true;
         }
 
         if (value.equals(""))
         {
             error.append_to_error("Value can not be empty");
+            error.getErrors()[3] = true;
         }
         else
         {
             if (Utils.is_valid_moneystring(value))
             {
                 error.append_to_error("Syntax Error in value-field");
+                error.getErrors()[3] = true;
             }
+        }
+
+        if (category_id == null)
+        {
+            error.append_to_error("You must select a category");
+            error.getErrors()[5] = true;
         }
 
         return error;

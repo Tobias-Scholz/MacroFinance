@@ -4,12 +4,16 @@ import java.util.HashMap;
 
 public class TradeError
 {
-    private String error_text;
-    private HashMap<Integer, Boolean> errors;
+    private String error_text = "";
+    private boolean[] errors;
 
     public TradeError()
     {
-        errors = new HashMap<>();
+        errors = new boolean[6];
+        for (int i = 0; i < errors.length; i++)
+        {
+            errors[i] = false;
+        }
     }
 
     public String getError_text()
@@ -17,7 +21,7 @@ public class TradeError
         return error_text;
     }
 
-    public HashMap<Integer, Boolean> getErrors()
+    public boolean[] getErrors()
     {
         return errors;
     }
@@ -25,5 +29,14 @@ public class TradeError
     public void append_to_error(String string)
     {
         error_text += string + "\n";
+    }
+
+    public boolean any_error()
+    {
+        for (boolean b : errors)
+        {
+            if (b) return true;
+        }
+        return false;
     }
 }

@@ -6,9 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
-import model.ModelController;
-import model.Position;
-import model.Trade;
+import model.*;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -112,60 +110,49 @@ public class NewTradeFormController
         categoryChoiceBox.setStyle(null);
         errorText.setText("");
 
-        boolean error = false;
-        double value = 0.0;
-        int to_position_id;
-        int from_position_id;
-        String description;
-        int category_id;
+        Long value = -1l;
+        Integer to_position_id = toPositionChoice.getSelectionModel().getSelectedItem();
+        Integer from_position_id = fromPositionChoice.getSelectionModel().getSelectedItem();
+        String description = commentField.getText();
+        Integer category_id = categoryChoiceBox.getSelectionModel().getSelectedItem();
         LocalDate date = datePicker.getValue();
 
-        if (valueField.getText().length() == 0)
+        TradeError error = Trade.verify_trade(
+                fromPositionChoice.getSelectionModel().getSelectedItem(),
+                toPositionChoice.getSelectionModel().getSelectedItem(),
+                valueField.getText(),
+                commentField.getText(),
+                datePicker.getValue(),
+                categoryChoiceBox.getSelectionModel().getSelectedItem()
+        );
+
+        if (error.getErrors()[3])
         {
-            add_text_ln(errorText, "Value-field can not be empty.");
             valueField.setStyle("-fx-border-color: #FF0000");
-            error = true;
         }
         else
         {
-            try
-            {
-                value = Double.valueOf(valueField.getText());
-            }
-            catch (Exception e)
-            {
-                add_text_ln(errorText, "Value-field must contain a number.");
-                valueField.setStyle("-fx-border-color: #FF0000");
-                error = true;
-            }
+            value = Utils.convert_string_to_money(valueField.getText());
         }
 
-        to_position_id = toPositionChoice.getSelectionModel().getSelectedItem();
-        from_position_id = fromPositionChoice.getSelectionModel().getSelectedItem();
-
-        if (to_position_id == from_position_id)
+        if (error.getErrors()[0])
         {
-            add_text_ln(errorText, "Positions can not be the same value.");
             toPositionChoice.setStyle("-fx-border-color: #FF0000");
             fromPositionChoice.setStyle("-fx-border-color: #FF0000");
-            error = true;
         }
 
-        description = commentField.getText();
-
-        category_id = -1;
-        if (categoryChoiceBox.getSelectionModel().getSelectedItem() == null)
+        if (error.getErrors()[5])
         {
-            error = true;
-            add_text_ln(errorText, "You must select a category.");
             categoryChoiceBox.setStyle("-fx-border-color: #FF0000");
         }
-        else
-            category_id = categoryChoiceBox.getSelectionModel().getSelectedItem();
 
-        if (!error)
+        if (!error.any_error())
         {
             superControllerRef.insert_new_trade(from_position_id, to_position_id, description, value, date, category_id);
+        }
+        else
+        {
+            add_text_ln(errorText, error.getError_text());
         }
     }
 
