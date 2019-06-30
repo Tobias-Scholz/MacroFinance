@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import model.ModelController;
 import model.Trade;
+import model.TradeError;
 
 import java.util.Date;
 
@@ -82,10 +83,21 @@ public class TradeRow
         submitButton = new Button("Submit");
         deleteButton = new Button("X");
 
-        submitButton.setOnAction(actionEvent ->
-        {
+        submitButton.setOnAction(actionEvent -> submit_changes());
+    }
 
-        });
+    private void submit_changes()
+    {
+        TradeError error = Trade.verify_trade(
+                from_id_combobox.getSelectionModel().getSelectedItem(),
+                to_id_combobox.getSelectionModel().getSelectedItem(),
+                description_textfield.getText(),
+                value_textfield.getText(),
+                datePicker.getValue(),
+                category_id_combobox.getSelectionModel().getSelectedItem()
+        );
+
+
     }
 
     public Trade getTrade()

@@ -197,11 +197,6 @@ public class Day implements CustomTableRow
         return values;
     }
 
-    public void setValues(ArrayList<PD_pair> values)
-    {
-        this.values = values;
-    }
-
     @Override
     public LocalDate getDate()
     {

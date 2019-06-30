@@ -126,6 +126,12 @@ public class NewTradeFormController
                 categoryChoiceBox.getSelectionModel().getSelectedItem()
         );
 
+        if (error.getErrors()[0] || error.getErrors()[1])
+        {
+            toPositionChoice.setStyle("-fx-border-color: #FF0000");
+            fromPositionChoice.setStyle("-fx-border-color: #FF0000");
+        }
+
         if (error.getErrors()[3])
         {
             valueField.setStyle("-fx-border-color: #FF0000");
@@ -133,12 +139,6 @@ public class NewTradeFormController
         else
         {
             value = Utils.convert_string_to_money(valueField.getText());
-        }
-
-        if (error.getErrors()[0])
-        {
-            toPositionChoice.setStyle("-fx-border-color: #FF0000");
-            fromPositionChoice.setStyle("-fx-border-color: #FF0000");
         }
 
         if (error.getErrors()[5])
