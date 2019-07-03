@@ -53,7 +53,7 @@ public class TradePopupController
     private final double DEFAULT_TO_POSITION_COLUMN_WIDTH = 200;
     private final double DEFAULT_FROM_POSITION_COLUMN_WIDTH = 200;
 
-    void init(Day day, ModelController modelController)
+    void init(Day day, ModelController modelController, Controller controller)
     {
         id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getTrade().getId()));
         to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getTo_id_combobox()));
@@ -74,7 +74,7 @@ public class TradePopupController
         ObservableList<TradeRow> items = FXCollections.observableArrayList();
         for (Trade trade : day.getTrades())
         {
-            items.add(new TradeRow(trade, modelController));
+            items.add(new TradeRow(trade, modelController, controller));
         }
 
         tableView.setItems(items);

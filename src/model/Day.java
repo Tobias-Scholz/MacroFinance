@@ -34,53 +34,13 @@ public class Day implements CustomTableRow
                 values.set(tempPos.getColumn_index(), new PD_pair(tempPos, null));
         }
 
-        generate_values();
+        reload();
     }
 
-    public void reload()
+    void reload()
     {
-        for (int i = 0; i < values.size(); i++)
-        {
-            PD_pair pd_pair = values.get(i);
-            pd_pair.setValue(null);
+        applicable_trades = new ArrayList<>();
 
-            if (prev_row == null)
-            {
-                if (pd_pair.getPosition().getStart_date().isEqual(date))
-                {
-                    pd_pair.setValue(pd_pair.getPosition().getStart_value());
-                }
-            }
-            else
-            {
-                PD_pair prev_pair = prev_row.getValues().get(i);
-
-                if (pd_pair.getPosition().getStart_date().isBefore(date))
-                {
-                    pd_pair.setValue(prev_pair.getValue());
-                    apply_trades(pd_pair);
-                }
-                else if (pd_pair.getPosition().getStart_date().isEqual(date))
-                {
-                    pd_pair.setValue(pd_pair.getPosition().getStart_value());
-                    apply_trades(pd_pair);
-                }
-            }
-        }
-
-        total = 0;
-        for (PD_pair pair : values)
-        {
-            if (pair.getValue() != null)
-                total += pair.getValue();
-        }
-
-        if (prev_row != null)
-            total_diff = total - prev_row.getTotal();
-    }
-
-    void generate_values()
-    {
         for (int i = 0; i < values.size(); i++)
         {
             PD_pair pair = values.get(i);
@@ -126,7 +86,6 @@ public class Day implements CustomTableRow
 
     private void find_trades(PD_pair pair)
     {
-
         if (modelControllerRef.getTrade_stack().get(pair.getPosition()).size() <= 0)
         {
             return;

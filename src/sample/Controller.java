@@ -81,7 +81,7 @@ public class Controller
         {
             Pane root = loader.load();
             TradePopupController controller = loader.getController();
-            controller.init(day, modelController);
+            controller.init(day, modelController, this);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
@@ -92,9 +92,9 @@ public class Controller
         }
     }
 
-    public void update_trade(Trade trade)
+    public void update_trade(Trade trade, LocalDate old_date)
     {
-        modelController.update_trade(trade);
+        modelController.update_trade(trade, old_date);
         treeTableView.refresh();
         chart.redraw_chart();
     }

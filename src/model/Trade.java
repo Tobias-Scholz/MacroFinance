@@ -151,7 +151,7 @@ public class Trade
         }
         else
         {
-            if (Utils.is_valid_moneystring(value))
+            if (!Utils.is_valid_moneystring(value))
             {
                 error.append_to_error("Syntax Error in value-field");
                 error.getErrors()[3] = true;

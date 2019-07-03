@@ -9,7 +9,9 @@ import javafx.util.StringConverter;
 import model.ModelController;
 import model.Trade;
 import model.TradeError;
+import model.Utils;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class TradeRow
@@ -26,8 +28,11 @@ public class TradeRow
     private Button submitButton;
     private Button deleteButton;
 
-    TradeRow(Trade real_trade, ModelController modelController)
+    private Controller controller;
+
+    TradeRow(Trade real_trade, ModelController modelController, Controller controller)
     {
+        this.controller = controller;
         this.trade = real_trade;
         category_id_combobox = new ComboBox<>();
         category_id_combobox.setItems(modelController.getCategory_ids());
@@ -91,13 +96,25 @@ public class TradeRow
         TradeError error = Trade.verify_trade(
                 from_id_combobox.getSelectionModel().getSelectedItem(),
                 to_id_combobox.getSelectionModel().getSelectedItem(),
-                description_textfield.getText(),
                 value_textfield.getText(),
+                description_textfield.getText(),
                 datePicker.getValue(),
                 category_id_combobox.getSelectionModel().getSelectedItem()
         );
 
+        System.out.println(error.getError_text());
 
+        if (!error.any_error())
+        {
+            LocalDate old_date = trade.getDate();
+            trade.setPosten_id_from(from_id_combobox.getSelectionModel().getSelectedItem());
+            trade.setPosten_id_to(to_id_combobox.getSelectionModel().getSelectedItem());
+            trade.setDescription(description_textfield.getText());
+            trade.setValue(Utils.convert_string_to_money(value_textfield.getText()));
+            trade.setDate(datePicker.getValue());
+            trade.setCategory_id(category_id_combobox.getSelectionModel().getSelectedItem());
+            controller.update_trade(trade, old_date);
+        }
     }
 
     public Trade getTrade()

@@ -39,7 +39,7 @@ public class ModelController
         load_trades();
         load_categories();
         loadPositions();
-        load_trade_stack();
+        load_trade_stack(first_date);
 
         reload();
     }
@@ -96,7 +96,7 @@ public class ModelController
         current_month.setLast_day_of_month(current_day);
     }
 
-    private void load_trade_stack()
+    private void load_trade_stack(LocalDate start_date)
     {
         trade_stack = new HashMap<>();
 
@@ -108,7 +108,7 @@ public class ModelController
 
             try
             {
-                ResultSet resultSet = Database.query("SELECT * FROM Trade WHERE from_id=" + position.getId() + " OR to_id=" + position.getId() + " ORDER BY date(date) DESC");
+                ResultSet resultSet = Database.query("SELECT * FROM Trade WHERE (from_id=" + position.getId() + " OR to_id=" + position.getId() + ") AND date(date)>date(" + start_date.toString() + ") ORDER BY date(date) DESC");
                 while (resultSet.next())
                 {
                     trade_stack.get(position).push(trade_container.get(resultSet.getInt("id")));
@@ -295,7 +295,7 @@ public class ModelController
         }
     }
 
-    public void update_trade(Trade trade)
+    public void update_trade(Trade trade, LocalDate old_date)
     {
         Connection con = Database.getCon();
 
@@ -316,7 +316,8 @@ public class ModelController
             e.printStackTrace();
         }
 
-        reload_after(trade.getDate());
+        load_trade_stack(old_date);
+        reload_after(old_date);
     }
 
     public ArrayList<Day> getAll_days()
