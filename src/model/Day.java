@@ -4,6 +4,7 @@ import tree_table.CustomTableRow;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Day implements CustomTableRow
 {
@@ -41,6 +42,20 @@ public class Day implements CustomTableRow
     {
         applicable_trades = new ArrayList<>();
 
+        Stack<Integer> trade_stack = modelControllerRef.getTrade_stack();
+
+        try
+        {
+            while (modelControllerRef.getTrade_container().get(trade_stack.peek()).getDate().isEqual(date))
+            {
+                applicable_trades.add(modelControllerRef.getTrade_container().get(trade_stack.pop()));
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+
         for (int i = 0; i < values.size(); i++)
         {
             PD_pair pair = values.get(i);
@@ -50,8 +65,6 @@ public class Day implements CustomTableRow
                 if (pair.getPosition().getStart_date().isEqual(date))
                 {
                     pair.setValue(pair.getPosition().getStart_value());
-                    find_trades(pair);
-                    apply_trades(pair);
                 }
             }
             else
@@ -61,15 +74,26 @@ public class Day implements CustomTableRow
                 if (pair.getPosition().getStart_date().isBefore(date))
                 {
                     pair.setValue(prev_pair.getValue());
-                    find_trades(pair);
-                    apply_trades(pair);
                 }
                 else if (pair.getPosition().getStart_date().isEqual(date))
                 {
                     pair.setValue(pair.getPosition().getStart_value());
-                    find_trades(pair);
-                    apply_trades(pair);
                 }
+            }
+        }
+
+        for (Trade t : applicable_trades)
+        {
+            Position to_position = modelControllerRef.getPositions().get(t.getPosten_id_to());
+            Position from_position = modelControllerRef.getPositions().get(t.getPosten_id_from());
+
+            if (to_position.getId() != 0)
+            {
+                values.get(to_position.getColumn_index()).setValue(values.get(to_position.getColumn_index()).getValue() + t.getValue());
+            }
+            if (from_position.getId() != 0)
+            {
+                values.get(from_position.getColumn_index()).setValue(values.get(from_position.getColumn_index()).getValue() - t.getValue());
             }
         }
 
@@ -82,41 +106,6 @@ public class Day implements CustomTableRow
 
         if (prev_row != null)
             total_diff = total - prev_row.getTotal();
-    }
-
-    private void find_trades(PD_pair pair)
-    {
-        if (modelControllerRef.getTrade_stack().get(pair.getPosition()).size() <= 0)
-        {
-            return;
-        }
-
-        while(modelControllerRef.getTrade_stack().get(pair.getPosition()).size() > 0)
-        {
-            if (modelControllerRef.getTrade_stack().get(pair.getPosition()).peek().getDate().isAfter(date))
-            {
-                break;
-            }
-
-            Trade tempTrade = modelControllerRef.getTrade_stack().get(pair.getPosition()).pop();
-
-            applicable_trades.add(tempTrade);
-        }
-    }
-
-    private void apply_trades(PD_pair pair)
-    {
-        for (Trade t : applicable_trades)
-        {
-            if (t.getPosten_id_to() == pair.getPosition().getId())
-            {
-                pair.setValue(pair.getValue() + t.getValue());
-            }
-            if (t.getPosten_id_from() == pair.getPosition().getId())
-            {
-                pair.setValue(pair.getValue() - t.getValue());
-            }
-        }
     }
 
     public boolean did_value_change(int column)

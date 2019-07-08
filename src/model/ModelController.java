@@ -24,7 +24,7 @@ public class ModelController
     private ObservableList<Integer> category_ids;
     private HashMap<Integer, Trade> trade_container;
 
-    private Map<Position, Stack<Trade>> trade_stack;
+    private Stack<Integer> trade_stack;
 
     private Map<Integer, Position> positions = new HashMap<>();
     private ObservableList<Integer> position_ids = FXCollections.observableArrayList();
@@ -98,26 +98,19 @@ public class ModelController
 
     private void load_trade_stack(LocalDate start_date)
     {
-        trade_stack = new HashMap<>();
+        trade_stack = new Stack<>();
 
-        for (Integer position_id : position_ids)
+        try
         {
-            Position position = positions.get(position_id);
-
-            trade_stack.put(position, new Stack<>());
-
-            try
+            ResultSet resultSet = Database.query("SELECT * FROM Trade WHERE date(date)>date(" + start_date.toString() + ") ORDER BY date(date) DESC");
+            while (resultSet.next())
             {
-                ResultSet resultSet = Database.query("SELECT * FROM Trade WHERE (from_id=" + position.getId() + " OR to_id=" + position.getId() + ") AND date(date)>date(" + start_date.toString() + ") ORDER BY date(date) DESC");
-                while (resultSet.next())
-                {
-                    trade_stack.get(position).push(trade_container.get(resultSet.getInt("id")));
-                }
+                trade_stack.push(resultSet.getInt("id"));
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -365,7 +358,7 @@ public class ModelController
         return first_date;
     }
 
-    public Map<Position, Stack<Trade>> getTrade_stack()
+    public Stack<Integer> getTrade_stack()
     {
         return trade_stack;
     }
