@@ -48,10 +48,22 @@ public class TradePopupController
     private final String ID_COLUMN_WIDTH = "id_column_width";
     private final String TO_POSITION_COLUMN_WIDTH = "to_position_column_width";
     private final String FROM_POSITION_COLUMN_WIDTH = "from_position_column_width";
+    private final String VALUE_COLUMN_WIDTH = "value_column_width";
+    private final String DATE_COLUMN_WIDTH = "date_column_width";
+    private final String CATEGORY_COLUMN_WIDTH = "category_column_width";
+    private final String DESCRIPTION_COLUMN_WIDTH = "description_column_width";
+    private final String SUBMIT_COLUMN_WIDTH = "submit_column_width";
+    private final String DELETE_COLUMN_WIDTH = "delete_column_width";
 
-    private final double DEFAULT_ID_COLUMN_WIDTH = 50;
-    private final double DEFAULT_TO_POSITION_COLUMN_WIDTH = 200;
-    private final double DEFAULT_FROM_POSITION_COLUMN_WIDTH = 200;
+    private final double DEFAULT_ID_COLUMN_WIDTH = 35;
+    private final double DEFAULT_TO_POSITION_COLUMN_WIDTH = 120;
+    private final double DEFAULT_FROM_POSITION_COLUMN_WIDTH = 120;
+    private final double DEFAULT_VALUE_COLUMN_WIDTH = 85;
+    private final double DEFAULT_DATE_COLUMN_WIDTH = 110;
+    private final double DEFAULT_CATEGORY_COLUMN_WIDTH = 100;
+    private final double DEFAULT_DESCRIPTION__COLUMN_WIDTH = 180;
+    private final double DEFAULT_SUBMIT_COLUMN_WIDTH = 70;
+    private final double DEFAULT_DELETE_COLUMN_WIDTH = 40;
 
     void init(Day day, ModelController modelController, Controller controller)
     {
@@ -65,11 +77,18 @@ public class TradePopupController
         submit_column.setCellValueFactory(tradeRowButtonCellDataFeatures -> new SimpleObjectProperty<>(tradeRowButtonCellDataFeatures.getValue().getSubmitButton()));
         delete_column.setCellValueFactory(tradeRowButtonCellDataFeatures -> new SimpleObjectProperty<>(tradeRowButtonCellDataFeatures.getValue().getDeleteButton()));
 
-        id_column.setPrefWidth(Preferences.userRoot().getDouble(ID_COLUMN_WIDTH, DEFAULT_ID_COLUMN_WIDTH));
-
-        id_column.widthProperty().addListener(observable -> Preferences.userRoot().putDouble(ID_COLUMN_WIDTH, id_column.getWidth()));
+        id_column.setPrefWidth(DEFAULT_ID_COLUMN_WIDTH);
+        to_position_column.setPrefWidth(DEFAULT_TO_POSITION_COLUMN_WIDTH);
+        from_position_column.setPrefWidth(DEFAULT_FROM_POSITION_COLUMN_WIDTH);
+        value_column.setPrefWidth(DEFAULT_VALUE_COLUMN_WIDTH);
+        description_column.setPrefWidth(DEFAULT_DESCRIPTION__COLUMN_WIDTH);
+        category_column.setPrefWidth(DEFAULT_CATEGORY_COLUMN_WIDTH);
+        date_column.setPrefWidth(DEFAULT_DATE_COLUMN_WIDTH);
+        submit_column.setPrefWidth(DEFAULT_SUBMIT_COLUMN_WIDTH);
+        delete_column.setPrefWidth(DEFAULT_DELETE_COLUMN_WIDTH);
 
         id_column.setStyle("-fx-alignment: CENTER");
+        submit_column.setStyle("-fx-alignment: CENTER");
 
         ObservableList<TradeRow> items = FXCollections.observableArrayList();
         for (Trade trade : day.getTrades())
@@ -79,5 +98,11 @@ public class TradePopupController
 
         tableView.setItems(items);
         tableView.setSelectionModel(null);
+    }
+
+    void on_close()
+    {
+        Preferences.userRoot().node("MacroFinance").putDouble(ID_COLUMN_WIDTH, id_column.getWidth());
+
     }
 }

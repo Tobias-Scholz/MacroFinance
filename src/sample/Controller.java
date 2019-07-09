@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.ModelController;
 import model.Trade;
 import tree_table.CustomTableRow;
@@ -83,6 +84,7 @@ public class Controller
             TradePopupController controller = loader.getController();
             controller.init(day, modelController, this);
             Scene scene = new Scene(root);
+            stage.setOnCloseRequest(windowEvent -> controller.on_close());
             stage.setScene(scene);
             stage.show();
         }

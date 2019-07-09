@@ -104,7 +104,7 @@ public class ModelController
 
         try
         {
-            ResultSet resultSet = Database.query("SELECT * FROM Trade WHERE date(date)>date(" + start_date.toString() + ") ORDER BY date(date) DESC");
+            ResultSet resultSet = Database.query("SELECT * FROM Trade WHERE date(date)>=date(\"" + start_date.toString() + "\") ORDER BY date(date) DESC");
             while (resultSet.next())
             {
                 trade_stack.push(resultSet.getInt("id"));
@@ -311,8 +311,8 @@ public class ModelController
             e.printStackTrace();
         }
 
-        load_trade_stack(old_date);
-        reload_after(old_date);
+        load_trade_stack(old_date.isBefore(trade.getDate()) ? old_date : trade.getDate());
+        reload_after(old_date.isBefore(trade.getDate()) ? old_date : trade.getDate());
     }
 
     public ArrayList<Day> getAll_days()
