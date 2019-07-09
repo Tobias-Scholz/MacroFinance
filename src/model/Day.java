@@ -123,18 +123,6 @@ public class Day implements CustomTableRow
         return false;
     }
 
-    public long get_row_difference(int column)
-    {
-        if (prev_row == null)
-        {
-            return values.get(column).getValue();
-        }
-        else
-        {
-            return prev_row.getValues().get(column).getValue() - values.get(column).getValue();
-        }
-    }
-
     void onEditButtonPress()
     {
 
