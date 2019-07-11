@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import model.Day;
@@ -65,7 +66,7 @@ public class TradePopupController
     private final double DEFAULT_SUBMIT_COLUMN_WIDTH = 70;
     private final double DEFAULT_DELETE_COLUMN_WIDTH = 40;
 
-    void init(Day day, ModelController modelController, Controller controller)
+    void init(Day day, ModelController modelController, Controller controller, Stage stage)
     {
         id_column.setCellValueFactory(tradeIntegerCellDataFeatures -> new SimpleObjectProperty<>(tradeIntegerCellDataFeatures.getValue().getTrade().getId()));
         to_position_column.setCellValueFactory(tradeStringCellDataFeatures -> new SimpleObjectProperty<>(tradeStringCellDataFeatures.getValue().getTo_id_combobox()));
@@ -87,8 +88,19 @@ public class TradePopupController
         submit_column.setPrefWidth(DEFAULT_SUBMIT_COLUMN_WIDTH);
         delete_column.setPrefWidth(DEFAULT_DELETE_COLUMN_WIDTH);
 
-        id_column.setStyle("-fx-alignment: CENTER");
-        submit_column.setStyle("-fx-alignment: CENTER");
+        double window_width = 0;
+        for (TableColumn tableColumn : tableView.getColumns())
+        {
+            tableColumn.setSortable(false);
+            window_width += tableColumn.getWidth() + 2;
+        }
+        stage.setWidth(window_width);
+
+        double old_description_width = description_column.getWidth();
+        double old_window_width = stage.getWidth();
+        stage.widthProperty().addListener(observable -> {
+            description_column.setPrefWidth(old_description_width - (old_window_width - stage.getWidth()));
+        });
 
         ObservableList<TradeRow> items = FXCollections.observableArrayList();
         for (Trade trade : day.getTrades())

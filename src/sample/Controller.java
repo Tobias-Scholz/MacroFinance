@@ -77,14 +77,15 @@ public class Controller
     {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TradeInfo.fxml"));
-        stage.setTitle("Hello World");
+        stage.setTitle(day.getDate().toString());
         try
         {
             Pane root = loader.load();
             TradePopupController controller = loader.getController();
-            controller.init(day, modelController, this);
+            controller.init(day, modelController, this, stage);
             Scene scene = new Scene(root);
             stage.setOnCloseRequest(windowEvent -> controller.on_close());
+            scene.getStylesheets().add("sample/style.css");
             stage.setScene(scene);
             stage.show();
         }

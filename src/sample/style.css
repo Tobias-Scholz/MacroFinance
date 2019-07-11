@@ -10,12 +10,57 @@
     -fx-background-radius: 5, 4, 3;
 }
 
-.tree-table-view:focused{
+.tree-table-view:focused {
     -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
     -fx-background-insets: 0, 1, 2;
 }
 
-.tree-table-row{
+.table-view .column-header{
+    -fx-background-color: linear-gradient(to bottom, #606060, #555555);
+    -fx-border-width: 1 1 0 0;
+    -fx-border-color: #505050;
+}
+
+.table-view .column-header .label{
+    -fx-text-fill: #FFFFFF;
+}
+
+.center_column{
+    -fx-alignment: center;
+}
+
+.tree-table-row-cell {
+    -fx-background-color: -fx-table-cell-border-color, -fx-control-inner-background;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+    -fx-text-fill: -fx-text-inner-color;
+}
+.tree-table-row-cell:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-focus-color;
+    -fx-background-insets: 0, 1, 2;
+}
+
+.tree-table-row-cell:odd {
+    -fx-background-color: -fx-table-cell-border-color, derive(-fx-control-inner-background,-5%);
+    -fx-background-insets: 0, 0 0 1 0;
+}
+
+.tree-table-row-cell:selected:odd {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-focus-color;
+    -fx-background-insets: 0, 1, 2;
+}
+
+.tree-table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #606060, #555555);
+    -fx-border-width: 1 1 0 0;
+    -fx-border-color: #505050;
+}
+
+.tree-table-view .column-header .label{
+    -fx-text-fill: #FFFFFF;
+}
+
+.tree-table-view .column-header-background{
 
 }
 
