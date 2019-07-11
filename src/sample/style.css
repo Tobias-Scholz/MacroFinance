@@ -50,17 +50,23 @@
     -fx-background-insets: 0, 1, 2;
 }
 
-.tree-table-view .column-header {
+.tree-table-view .label{
+    -fx-text-fill: white;
+}
+
+.tree-table-view .column-header,
+.tree-table-view .column-header .filler,
+.tree-table-view .column-header-background .filler {
     -fx-background-color: linear-gradient(to bottom, #606060, #555555);
-    -fx-border-width: 1 1 0 0;
-    -fx-border-color: #505050;
 }
 
-.tree-table-view .column-header .label{
-    -fx-text-fill: #FFFFFF;
+.choice-box, .button{
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
 }
 
-.tree-table-view .column-header-background{
-
+.menu-bar{
+    -fx-background-color: white;
 }
 
