@@ -40,6 +40,11 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
+          <Tab text="Dashboard">
+              <content>
+
+              </content>
+          </Tab>
           <Tab text="Table">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">

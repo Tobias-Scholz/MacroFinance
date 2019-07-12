@@ -70,3 +70,12 @@
     -fx-background-color: white;
 }
 
+.tab{
+    -fx-border-radius: 3px;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
